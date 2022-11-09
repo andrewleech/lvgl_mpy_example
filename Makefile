@@ -5,13 +5,12 @@ MAKE_OPTIONS := -j$(shell nproc)
 PROJECT_BASE :="$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))"
 MICROPYTHON_BASE := $(PROJECT_BASE)/lib/micropython
 
-# BOARD_DIR = $(abspath $(BOARD))
+BOARD_DIR = $(abspath boards/$(BOARD))
 BUILD = $(abspath build-$(BOARD))
 
 .PHONY: all
 all:
-	# $(MAKE) -C $(MICROPYTHON_BASE)/ports/$(PORT) BUILD=$(BUILD) BOARD=$(BOARD) BOARD_DIR=$(BOARD_DIR)
-	$(MAKE) -C $(MICROPYTHON_BASE)/ports/$(PORT) $(MAKE_OPTIONS) BUILD=$(BUILD) BOARD=$(BOARD) COPT=-Os MICROPY_FLOAT_IMPL=double DEBUG=1 USER_C_MODULES=$(PROJECT_BASE)/cmodules
+	$(MAKE) -C $(MICROPYTHON_BASE)/ports/$(PORT) $(MAKE_OPTIONS) BUILD=$(BUILD) BOARD=$(BOARD) BOARD_DIR=$(BOARD_DIR) COPT=-Os
 	@echo "firmware available at: $(BUILD)/firmware.elf"
 
 .PHONY: clean
