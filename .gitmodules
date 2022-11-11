@@ -4,3 +4,9 @@
 [submodule "cmodules/lv_binding_micropython"]
 	path = cmodules/lv_binding_micropython
 	url = https://github.com/lvgl/lv_binding_micropython.git
+[submodule "cmodules/lcd_binding_micropython"]
+	path = cmodules/lcd_binding_micropython
+	url = https://github.com/lbuque/lcd_binding_micropython.git
+[submodule "cmodules/st7789s3_mpy"]
+	path = cmodules/st7789s3_mpy
+	url = https://github.com/russhughes/st7789s3_mpy

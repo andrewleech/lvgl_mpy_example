@@ -25,3 +25,23 @@ unix:
 	    BUILD=$(PROJECT_BASE)/build-unix DEBUG=1\
 		VARIANT=libvgl VARIANT_DIR=$(PROJECT_BASE)/unix
 
+.PHONY: esp
+esp:
+	@docker run -ti --rm -v $$(pwd):/code -w /code espressif/idf:v4.4.3 bash -c '\
+	git config --global --add safe.directory "*" &&\
+	make -C lib/micropython/ports/esp32 submodules &&\
+	pushd boards/LILYGO_T-DisplayS3 &&\
+	idf.py -D MICROPY_BOARD="LILYGO_T-DisplayS3" build &&\
+	popd &&\
+	python3 lib/micropython/ports/esp32/makeimg.py \
+		boards/LILYGO_T-DisplayS3/build/sdkconfig \
+		boards/LILYGO_T-DisplayS3/build/bootloader/bootloader.bin \
+		boards/LILYGO_T-DisplayS3/build/partition_table/partition-table.bin \
+		boards/LILYGO_T-DisplayS3/build/micropython.bin \
+		boards/LILYGO_T-DisplayS3/build/firmware.bin \
+		boards/LILYGO_T-DisplayS3/build/micropython.uf2\
+	'
+
+.PHONY: esp-deploy
+make esp-deploy:
+	esptool.py --chip esp32s3 --port /dev/ttyACM0 write_flash -z 0 boards/LILYGO_T-DisplayS3/build/firmware.bin
