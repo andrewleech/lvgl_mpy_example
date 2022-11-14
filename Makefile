@@ -17,3 +17,11 @@ all:
 clean:
 	@echo "Cleaning MicroPython ..."
 	rm -rf $(PROJECT_BASE)/build-*
+
+.PHONY: unix
+unix:
+	$(MAKE) -C $(MICROPYTHON_BASE)/ports/unix $(MAKE_OPTIONS) VARIANT=libvgl VARIANT_DIR=$(PROJECT_BASE)/unix submodules
+	$(MAKE) -C $(MICROPYTHON_BASE)/ports/unix $(MAKE_OPTIONS) \
+	    BUILD=$(PROJECT_BASE)/build-unix DEBUG=1\
+		VARIANT=libvgl VARIANT_DIR=$(PROJECT_BASE)/unix
+
