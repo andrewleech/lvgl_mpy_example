@@ -45,3 +45,16 @@ esp:
 .PHONY: esp-deploy
 make esp-deploy:
 	esptool.py --chip esp32s3 --port /dev/ttyACM0 write_flash -z 0 boards/LILYGO_T-DisplayS3/build/firmware.bin
+
+
+rp2:
+	make -j $(nproc) -C lib/micropython/ports/rp2 submodules
+	make -j $(nproc) -C lib/micropython/ports/rp2 BOARD=PICO USER_C_MODULES=../../../../cmodules/lv_binding_micropython/bindings.cmake
+
+
+esp32:
+	@docker run -ti --rm -v $$(pwd):/code -w /code espressif/idf:v4.4.3 bash -c '\
+	git config --global --add safe.directory "*" &&\
+	make -C lib/micropython/ports/esp32 submodules &&\
+	make -C lib/micropython/ports/esp32 USER_C_MODULES=/code/cmodules/lv_binding_micropython/bindings.cmake \
+	'
